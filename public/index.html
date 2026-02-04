@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <!-- 
+        HEAD - La "cabeza" del documento HTML
+        Aquí van metadatos, estilos CSS y configuraciones
+    -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Configuraciones IVR</title>
+    
+    <!-- Enlazamos nuestro archivo CSS para darle estilo a la página -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- 
+        BODY - El "cuerpo" del documento HTML
+        Aquí va todo lo que el usuario ve en la pantalla
+    -->
+    
+    <!-- Contenedor principal -->
+    <div class="container">
+        <!-- Título de la página -->
+        <header>
+            <h1>📋 Gestión de Configuraciones IVR</h1>
+            <p class="subtitle">Consulta y actualiza configuraciones de IVR, Plataforma, Menú y Templates</p>
+        </header>
+
+        <!-- Botón para recargar datos -->
+        <div class="toolbar">
+            <button id="btnRecargar" class="btn-primary">
+                🔄 Recargar Datos
+            </button>
+            <span id="mensajeEstado" class="mensaje-estado"></span>
+        </div>
+
+        <!-- Tabla de configuraciones -->
+        <section class="table-section">
+            <div class="table-wrapper">
+                <table id="tablaConfiguraciones">
+                    <thead>
+                        <tr>
+                            <th>IVR</th>
+                            <th>PLATAFORMA</th>
+                            <th>OPC_MENU</th>
+                            <th>TEMPLATE</th>
+                            <th>CORTE</th>
+                            <th>ESTADO</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaBody">
+                        <!-- Aquí se cargarán los datos dinámicamente desde JavaScript -->
+                        <tr>
+                            <td colspan="6" class="loading">Cargando datos...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Mensaje de error (oculto por defecto) -->
+        <div id="mensajeError" class="error" style="display: none;"></div>
+    </div>
+
+    <!-- Enlazamos nuestro archivo JavaScript -->
+    <!-- Este archivo contiene toda la lógica interactiva de la página -->
+    <script src="app.js"></script>
+</body>
+</html>
+

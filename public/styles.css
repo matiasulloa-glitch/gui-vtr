@@ -1,0 +1,490 @@
+/**
+ * STYLES.CSS - Archivo de Estilos
+ * 
+ * Este archivo controla cómo se VE nuestra página web.
+ * CSS (Cascading Style Sheets) es el "maquillaje" de HTML.
+ * 
+ * Aquí definimos:
+ * - Colores
+ * - Tamaños de letra
+ * - Espaciados
+ * - Diseño y disposición de elementos
+ */
+
+/* 
+ * Reset básico y configuración general
+ * '*' significa "aplicar a todos los elementos"
+ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* 
+ * Estilos para el cuerpo de la página
+ */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 20px;
+    color: #333;
+}
+
+/* 
+ * Contenedor principal - El "marco" de nuestra aplicación
+ */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    padding: 40px;
+}
+
+/* 
+ * Estilos para el encabezado (header)
+ */
+header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding-bottom: 20px;
+    border-bottom: 3px solid #667eea;
+}
+
+header h1 {
+    color: #667eea;
+    font-size: 2.5em;
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    color: #666;
+    font-size: 1.1em;
+}
+
+/* 
+ * Estilos para las secciones (form-section, result-section, etc.)
+ */
+section {
+    margin-bottom: 30px;
+}
+
+section h2 {
+    color: #764ba2;
+    margin-bottom: 20px;
+    font-size: 1.8em;
+}
+
+/* 
+ * Estilos para el formulario
+ */
+.form-group {
+    margin-bottom: 25px;
+}
+
+/* 
+ * Estilos para las etiquetas (labels)
+ */
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #555;
+}
+
+/* 
+ * Estilos para los campos de entrada (input, select)
+ */
+input[type="text"],
+input[type="number"],
+select {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: border-color 0.3s;
+}
+
+/* 
+ * Cuando el usuario hace clic en un campo (focus)
+ */
+input:focus,
+select:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+/* 
+ * Texto pequeño de ayuda
+ */
+small {
+    display: block;
+    margin-top: 5px;
+    color: #888;
+    font-size: 0.9em;
+}
+
+/* 
+ * Estilos para los botones
+ */
+button {
+    padding: 12px 30px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+/* 
+ * Botón principal (azul/morado)
+ */
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    width: 100%;
+    padding: 15px;
+}
+
+/* 
+ * Efecto cuando pasas el mouse sobre el botón (hover)
+ */
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+/* 
+ * Botón secundario (gris)
+ */
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+    width: 100%;
+}
+
+.btn-secondary:hover {
+    background: #5a6268;
+    transform: translateY(-2px);
+}
+
+/* 
+ * Estilos para la sección de resultados
+ */
+.result-section {
+    background: #f8f9fa;
+    padding: 25px;
+    border-radius: 10px;
+    border-left: 5px solid #28a745;
+}
+
+/* 
+ * Tarjeta de resultado
+ */
+.result-card {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 15px;
+}
+
+.result-item {
+    margin-bottom: 15px;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 5px;
+}
+
+.result-item strong {
+    color: #667eea;
+    display: inline-block;
+    min-width: 180px;
+}
+
+/* 
+ * Estilos para mostrar información de reglas
+ */
+.regla-item {
+    background: #e7f3ff;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    border-left: 4px solid #667eea;
+}
+
+.regla-item h3 {
+    color: #667eea;
+    margin-bottom: 5px;
+}
+
+/* 
+ * Estilos para mensajes de error
+ */
+.error {
+    background: #f8d7da;
+    color: #721c24;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 15px;
+    border-left: 4px solid #dc3545;
+}
+
+/* 
+ * Estilos para mensajes de éxito
+ */
+.success {
+    background: #d4edda;
+    color: #155724;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 15px;
+    border-left: 4px solid #28a745;
+}
+
+/* 
+ * Estilos responsivos para móviles
+ * @media es como decir "cuando la pantalla sea pequeña, aplica estos estilos"
+ */
+/* 
+ * Estilos para la barra de herramientas (toolbar)
+ */
+.toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    gap: 15px;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 12px 24px;
+    width: auto;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+.mensaje-estado {
+    padding: 10px 15px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s;
+}
+
+.mensaje-estado.success {
+    background: #d4edda;
+    color: #155724;
+}
+
+.mensaje-estado.error {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.mensaje-estado.info {
+    background: #d1ecf1;
+    color: #0c5460;
+}
+
+/* 
+ * Estilos para la sección de la tabla
+ */
+.table-section {
+    margin-bottom: 30px;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* 
+ * Estilos para la tabla
+ */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    font-size: 14px;
+}
+
+table thead {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+table th {
+    padding: 15px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+table td {
+    padding: 15px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+table tbody tr:hover {
+    background: #f8f9fa;
+    transition: background 0.2s;
+}
+
+table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* 
+ * Estilos para las celdas de carga y error
+ */
+.loading,
+.error {
+    text-align: center;
+    padding: 30px !important;
+    color: #666;
+    font-style: italic;
+}
+
+.error {
+    color: #dc3545;
+}
+
+/* 
+ * Estilos para los switches (interruptores de activar/desactivar)
+ */
+.switch-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 26px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* 
+ * El "slider" es la parte visual del switch (el círculo deslizante)
+ */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 26px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+/* 
+ * Cuando el switch está activado (checked)
+ */
+input:checked + .slider {
+    background-color: #28a745;
+}
+
+input:checked + .slider:before {
+    transform: translateX(24px);
+}
+
+/* 
+ * Cuando el switch está deshabilitado (mientras se guarda)
+ */
+input:disabled + .slider {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* 
+ * Etiqueta de texto junto al switch
+ */
+.switch-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: #555;
+    min-width: 80px;
+}
+
+/* 
+ * Estilos para mensajes de error
+ */
+#mensajeError {
+    background: #f8d7da;
+    color: #721c24;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 15px;
+    border-left: 4px solid #dc3545;
+}
+
+/* 
+ * Estilos responsivos para móviles
+ * @media es como decir "cuando la pantalla sea pequeña, aplica estos estilos"
+ */
+@media (max-width: 768px) {
+    .container {
+        padding: 20px;
+    }
+    
+    header h1 {
+        font-size: 2em;
+    }
+    
+    table {
+        font-size: 12px;
+    }
+    
+    table th,
+    table td {
+        padding: 10px 8px;
+    }
+    
+    .toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .btn-primary {
+        width: 100%;
+    }
+    
+    .mensaje-estado {
+        text-align: center;
+    }
+}
+
