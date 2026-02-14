@@ -1,55 +1,37 @@
-/**
- * APP.JS - Archivo JavaScript del Frontend
- * 
- * Este archivo contiene toda la "lógica" de nuestra página web.
- * JavaScript es el lenguaje que hace que la página sea INTERACTIVA.
- * 
- * Se encarga de:
- * 1. Cargar los datos de la tabla al iniciar
- * 2. Escuchar cambios en los switches de ESTADO y CORTE
- * 3. Enviar actualizaciones a la API cuando el usuario cambia algo
- * 4. Mostrar mensajes de éxito o error
- */
-
-// ============================================
-// CONFIGURACIÓN
-// ============================================
-
-// La URL base de nuestra API
-// 'http://localhost:3000' es donde está corriendo nuestro servidor
 const API_URL = 'http://localhost:3000';
 
+// 🧠 Cambios pendientes
+let cambiosPendientes = {};
+//Orden de las columnas en la tabla
+const ORDEN_COLUMNAS = [
+    "IVR",
+    "PLATAFORMA",
+    "OPC_MENU",
+    "TEMPLATE",
+    "ESTADO",
+    "CORTE"
+];
+
+
 // ============================================
-// FUNCIONES PARA MOSTRAR MENSAJES
+// MENSAJES
 // ============================================
 
-/**
- * Función para mostrar un mensaje de error
- * 
- * @param {string} mensaje - El mensaje de error a mostrar
- */
 function mostrarError(mensaje) {
     const errorDiv = document.getElementById('mensajeError');
     errorDiv.textContent = '❌ Error: ' + mensaje;
     errorDiv.style.display = 'block';
-    
-    // Ocultar el mensaje después de 5 segundos
+
     setTimeout(() => {
         errorDiv.style.display = 'none';
     }, 5000);
 }
 
-/**
- * Función para mostrar un mensaje de éxito
- * 
- * @param {string} mensaje - El mensaje de éxito a mostrar
- */
 function mostrarMensaje(mensaje, tipo = 'success') {
     const mensajeEstado = document.getElementById('mensajeEstado');
     mensajeEstado.textContent = mensaje;
     mensajeEstado.className = 'mensaje-estado ' + tipo;
-    
-    // Ocultar el mensaje después de 3 segundos
+
     setTimeout(() => {
         mensajeEstado.textContent = '';
         mensajeEstado.className = 'mensaje-estado';
@@ -57,208 +39,173 @@ function mostrarMensaje(mensaje, tipo = 'success') {
 }
 
 // ============================================
-// FUNCIONES PARA CARGAR DATOS
+// CARGA DATOS
 // ============================================
 
-/**
- * Función para cargar las configuraciones desde la API
- * y mostrarlas en la tabla
- */
 async function cargarConfiguraciones() {
     const tablaBody = document.getElementById('tablaBody');
-    
-    // Mostrar mensaje de carga
-    tablaBody.innerHTML = '<tr><td colspan="6" class="loading">⏳ Cargando datos...</td></tr>';
-    
+
+    tablaBody.innerHTML = '<tr><td colspan="100%" class="loading">⏳ Cargando...</td></tr>';
+
     try {
-        // Hacemos una petición GET a la API
-        // fetch() es una función de JavaScript para hacer peticiones HTTP
         const response = await fetch(`${API_URL}/api/configuraciones`);
         const data = await response.json();
-        
-        // Si la respuesta fue exitosa
+
         if (response.ok && data.success) {
-            // Limpiamos la tabla
             tablaBody.innerHTML = '';
-            
-            // Si no hay datos, mostramos un mensaje
+
             if (data.data.length === 0) {
-                tablaBody.innerHTML = '<tr><td colspan="6" class="loading">No hay configuraciones disponibles</td></tr>';
+                tablaBody.innerHTML = '<tr><td>No hay datos</td></tr>';
                 return;
             }
+
+            const columnas = ORDEN_COLUMNAS.filter(col =>
+                data.data[0].hasOwnProperty(col)
+            );
             
-            // Recorremos cada configuración y creamos una fila en la tabla
+            
+
+            document.getElementById('tablaHead').innerHTML =
+                '<tr>' + columnas.map(c => `<th>${c}</th>`).join('') + '</tr>';
+
             data.data.forEach(config => {
-                const fila = crearFilaTabla(config);
-                tablaBody.appendChild(fila);
+                tablaBody.appendChild(crearFilaTabla(config));
             });
-            
-            mostrarMensaje(`✅ ${data.total} configuración(es) cargada(s)`, 'success');
-        } else {
-            mostrarError(data.error || 'Error al cargar los datos');
-            tablaBody.innerHTML = '<tr><td colspan="6" class="error">Error al cargar datos</td></tr>';
+
+            mostrarMensaje('✅ Datos cargados');
         }
-        
-    } catch (error) {
-        // Si algo salió mal (por ejemplo, el servidor no está corriendo)
-        mostrarError('No se pudo conectar con el servidor. Asegúrate de que esté corriendo en http://localhost:3000');
-        tablaBody.innerHTML = '<tr><td colspan="6" class="error">Error de conexión</td></tr>';
-        console.error('Error:', error);
+
+    } catch (e) {
+        mostrarError('Error cargando datos');
+        console.error(e);
     }
 }
 
-/**
- * Función para crear una fila de la tabla con los datos de una configuración
- * 
- * @param {Object} config - Objeto con los datos de la configuración
- * @returns {HTMLElement} - Elemento <tr> (table row) con los datos
- */
+// ============================================
+// CREAR FILA
+// ============================================
+
 function crearFilaTabla(config) {
-    // Creamos el elemento <tr> (fila de tabla)
     const fila = document.createElement('tr');
+
+    const columnas = ORDEN_COLUMNAS.filter(col =>
+        config.hasOwnProperty(col)
+    );
     
-    // Creamos las celdas con los datos
-    // Las primeras 4 columnas son solo lectura (no se pueden modificar)
-    fila.innerHTML = `
-        <td>${config.ivr}</td>
-        <td>${config.plataforma}</td>
-        <td>${config.opc_menu}</td>
-        <td>${config.template}</td>
-        <td>
-            <label class="switch">
-                <input 
-                    type="checkbox" 
-                    data-id="${config.id}" 
-                    data-campo="corte"
-                    ${config.corte ? 'checked' : ''}
-                >
-                <span class="slider"></span>
-            </label>
-            <span class="switch-label">${config.corte ? 'Activado' : 'Desactivado'}</span>
-        </td>
-        <td>
-            <label class="switch">
-                <input 
-                    type="checkbox" 
-                    data-id="${config.id}" 
-                    data-campo="estado"
-                    ${config.estado ? 'checked' : ''}
-                >
-                <span class="slider"></span>
-            </label>
-            <span class="switch-label">${config.estado ? 'Activado' : 'Desactivado'}</span>
-        </td>
-    `;
-    
-    // Agregamos un "escuchador" a cada checkbox para detectar cambios
-    const checkboxes = fila.querySelectorAll('input[type="checkbox"]');
-    checkboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', function() {
-            actualizarConfiguracion(
-                this.dataset.id, 
-                this.dataset.campo, 
-                this.checked,
-                this
-            );
+
+    fila.innerHTML = columnas.map(col => {
+        const valor = config[col];
+        const isSwitch = col.toUpperCase() === 'ESTADO' || col.toUpperCase() === 'CORTE';
+
+        if (isSwitch) {
+            const checked = valor === true || valor === 'true';
+
+            return `
+                <td>
+                    <label class="switch">
+                        <input type="checkbox"
+                            data-id="${config.id}"
+                            data-campo="${col.toLowerCase()}"
+                            ${checked ? 'checked' : ''}>
+                        <span class="slider"></span>
+                    </label>
+                    <span class="switch-label">${checked ? 'Activado' : 'Desactivado'}</span>
+                </td>
+            `;
+        }
+
+        return `<td>${valor ?? ''}</td>`;
+    }).join('');
+
+    // 🔥 EVENTO CAMBIO (YA NO LLAMA API)
+    fila.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+        cb.addEventListener('change', function () {
+            const id = this.dataset.id;
+            const campo = this.dataset.campo;
+            const valor = this.checked;
+
+            if (!cambiosPendientes[id]) {
+                cambiosPendientes[id] = {};
+            }
+
+            cambiosPendientes[id][campo] = valor;
+
+            console.log('🧠 cambiosPendientes:', cambiosPendientes);
+
+            const label = this.closest('td').querySelector('.switch-label');
+            label.textContent = valor ? 'Activado' : 'Desactivado';
+
+            this.closest('tr').style.backgroundColor = '#fff3cd';
+
+            document.getElementById('btnGuardar').disabled = false;
         });
     });
-    
+
     return fila;
 }
 
 // ============================================
-// FUNCIONES PARA ACTUALIZAR DATOS
+// GUARDAR CAMBIOS
 // ============================================
 
-/**
- * Función para actualizar una configuración en el servidor
- * 
- * @param {string} id - El ID de la configuración a actualizar
- * @param {string} campo - El campo a actualizar ('estado' o 'corte')
- * @param {boolean} valor - El nuevo valor (true o false)
- * @param {HTMLElement} checkbox - El elemento checkbox que se cambió
- */
-async function actualizarConfiguracion(id, campo, valor, checkbox) {
-    // Deshabilitamos el checkbox mientras se procesa
-    checkbox.disabled = true;
-    
-    // Actualizamos el label temporalmente
-    const label = checkbox.closest('td').querySelector('.switch-label');
-    const labelOriginal = label.textContent;
-    label.textContent = '⏳ Guardando...';
-    
+async function guardarCambios() {
+
+    if (Object.keys(cambiosPendientes).length === 0) {
+        mostrarMensaje('⚠️ No hay cambios', 'info');
+        return;
+    }
+
+    if (!confirm('¿Guardar cambios?')) return;
+
+    const btn = document.getElementById('btnGuardar');
+    btn.disabled = true;
+    btn.textContent = '⏳ Guardando...';
+
     try {
-        // Hacemos una petición PUT a la API
-        // PUT es el método HTTP para actualizar recursos
-        const response = await fetch(`${API_URL}/api/configuraciones/${id}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json' // Le decimos que enviamos JSON
-            },
-            body: JSON.stringify({
-                [campo]: valor // Esto crea un objeto como {estado: true} o {corte: false}
-            })
-        });
-        
-        // Convertimos la respuesta a JSON
-        const data = await response.json();
-        
-        // Si la respuesta fue exitosa
-        if (response.ok && data.success) {
-            // Actualizamos el label con el nuevo estado
-            label.textContent = valor ? 'Activado' : 'Desactivado';
-            mostrarMensaje(`✅ ${campo.toUpperCase()} actualizado correctamente`, 'success');
-        } else {
-            // Si hubo un error, revertimos el checkbox a su estado anterior
-            checkbox.checked = !valor;
-            label.textContent = labelOriginal;
-            mostrarError(data.error || 'Error al actualizar');
+        for (const id in cambiosPendientes) {
+            const cambios = cambiosPendientes[id];
+
+            console.log('📤 Enviando:', id, cambios);
+
+            const res = await fetch(`${API_URL}/api/configuraciones/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(cambios)
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                throw new Error(data.error || 'Error');
+            }
         }
-        
-    } catch (error) {
-        // Si algo salió mal, revertimos el checkbox
-        checkbox.checked = !valor;
-        label.textContent = labelOriginal;
-        mostrarError('Error de conexión al guardar cambios');
-        console.error('Error:', error);
+
+        mostrarMensaje('✅ Guardado exitoso');
+
+        cambiosPendientes = {};
+
+        cargarConfiguraciones();
+
+    } catch (e) {
+        mostrarError('Error guardando');
+        console.error(e);
     } finally {
-        // Rehabilitamos el checkbox
-        checkbox.disabled = false;
+        btn.disabled = true;
+        btn.textContent = '💾 Guardar Cambios';
     }
 }
 
 // ============================================
-// INICIALIZACIÓN
+// INIT
 // ============================================
 
-/**
- * Esperamos a que la página cargue completamente
- * Luego cargamos los datos y configuramos los botones
- */
-document.addEventListener('DOMContentLoaded', function() {
-    // Cargamos las configuraciones al iniciar
+document.addEventListener('DOMContentLoaded', () => {
+
     cargarConfiguraciones();
-    
-    // Configuramos el botón de recargar
-    const btnRecargar = document.getElementById('btnRecargar');
-    btnRecargar.addEventListener('click', function() {
-        mostrarMensaje('🔄 Recargando datos...', 'info');
-        cargarConfiguraciones();
-    });
+
+    document.getElementById('btnRecargar')
+        .addEventListener('click', cargarConfiguraciones);
+
+    document.getElementById('btnGuardar')
+        .addEventListener('click', guardarCambios);
 });
-
-/**
- * NOTA IMPORTANTE SOBRE ASYNC/AWAIT:
- * 
- * Las palabras clave 'async' y 'await' hacen que el código espere
- * a que una operación termine antes de continuar.
- * 
- * Ejemplo sin async/await:
- *   fetch(url) → no espera
- *   console.log(resultado) → se ejecuta inmediatamente (resultado aún no existe)
- * 
- * Ejemplo con async/await:
- *   const resultado = await fetch(url) → espera
- *   console.log(resultado) → se ejecuta después de obtener el resultado
- */
-

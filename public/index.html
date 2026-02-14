@@ -31,6 +31,10 @@
             <button id="btnRecargar" class="btn-primary">
                 🔄 Recargar Datos
             </button>
+            <button id="btnGuardar" class="btn-success" disabled>
+                💾 Guardar Cambios
+            </button>
+            
             <span id="mensajeEstado" class="mensaje-estado"></span>
         </div>
 
@@ -38,20 +42,16 @@
         <section class="table-section">
             <div class="table-wrapper">
                 <table id="tablaConfiguraciones">
-                    <thead>
+                    <thead id="tablaHead">
+                        <!-- Los encabezados se generarán dinámicamente desde JavaScript -->
                         <tr>
-                            <th>IVR</th>
-                            <th>PLATAFORMA</th>
-                            <th>OPC_MENU</th>
-                            <th>TEMPLATE</th>
-                            <th>CORTE</th>
-                            <th>ESTADO</th>
+                            <th colspan="100%" class="loading">Cargando encabezados...</th>
                         </tr>
                     </thead>
                     <tbody id="tablaBody">
                         <!-- Aquí se cargarán los datos dinámicamente desde JavaScript -->
                         <tr>
-                            <td colspan="6" class="loading">Cargando datos...</td>
+                            <td colspan="100%" class="loading">Cargando datos...</td>
                         </tr>
                     </tbody>
                 </table>
